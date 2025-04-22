@@ -43,8 +43,6 @@ llm = ChatGoogleGenerativeAI(
     max_tokens=500
 )
 
-
-
 # Setup RAG prompt and chains
 prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt),
@@ -60,14 +58,18 @@ def index():
 
 @app.route("/get", methods=["GET", "POST"])
 def chat():
-    msg = request.form["msg"]
+    msg = request.form["msg"].lower().strip()
     print("User Input:", msg)
 
+    # Handle common greetings
+    greetings = ["hello", "hi", "hey", "greetings"]
+    if msg in greetings:
+        return "Hi! How can I assist you with your medical questions today?"
+
+    # Process with RAG chain for other inputs
     response = rag_chain.invoke({"input": msg})
     print("Response:", response["answer"])
-
     return str(response["answer"])
-
 
 # Run app
 if __name__ == '__main__':
