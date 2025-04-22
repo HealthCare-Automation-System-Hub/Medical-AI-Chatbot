@@ -1,132 +1,193 @@
-# End-to-end-Medical-Chatbot-Generative-AI
+# Medical-Chatbot-Generative-AI 💡
 
+A professional-grade medical chatbot application powered by Generative AI, designed to provide intelligent and context-aware responses for medical inquiries. This project leverages **LangChain**, **Flask**, and **Google Gemini** models, with **Pinecone** for efficient vector storage and retrieval.
 
-# How to run?
-### STEPS:
+---
 
-Clone the repository
+## ✨ Features
+
+- Interactive medical chatbot powered by Google's Gemini model 🩺
+- Retrieval-Augmented Generation (RAG) for context-aware responses 📚
+- Stores embeddings in Pinecone for fast and efficient retrieval ⚡
+- Built with Flask for seamless web deployment 🌐
+- CI/CD integration with AWS and GitHub Actions 🚀
+
+---
+
+## 🛠️ Tech Stack
+
+- **Python** 🐍
+- **LangChain** 🔗
+- **Flask** 🌍
+- **Google Gemini (Generative AI)** 🤖
+- **Pinecone** 📦
+
+---
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following:
+
+- Python 3.10 🐍
+- Conda (for environment management) 🧩
+- Pinecone and Google API credentials 🔑
+- Docker (for deployment) 🐳
+- AWS account (for CI/CD deployment) ☁️
+
+---
+
+## 🚀 How to Run Locally
+
+### Step 1: Clone the Repository 📥
 
 ```bash
-Project repo: https://github.com/
+git clone https://github.com/<your-repo>/Medical-Chatbot-Generative-AI.git
+cd Medical-Chatbot-Generative-AI
 ```
-### STEP 01- Create a conda environment after opening the repository
+
+### Step 2: Create a Conda Environment 🖥️
 
 ```bash
 conda create -n medibot python=3.10 -y
-```
-
-```bash
 conda activate medibot
 ```
 
+### Step 3: Install Dependencies 📦
 
-### STEP 02- install the requirements
 ```bash
 pip install -r requirements.txt
 ```
 
+### Step 4: Configure Environment Variables ⚙️
 
-### Create a `.env` file in the root directory and add your Pinecone & openai credentials as follows:
+Create a `.env` file in the root directory and add your credentials:
 
 ```ini
-PINECONE_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-OPENAI_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+PINECONE_API_KEY="your-pinecone-api-key"
+GOOGLE_API_KEY="your-google-api-key"
 ```
 
+### Step 5: Store Embeddings in Pinecone 📈
+
+Run the script to store embeddings:
 
 ```bash
-# run the following command to store embeddings to pinecone
 python store_index.py
 ```
 
+### Step 6: Launch the Application 🌟
+
+Start the Flask server:
+
 ```bash
-# Finally run the following command
 python app.py
 ```
 
-Now,
-```bash
-open up localhost:
+### Step 7: Access the Chatbot 🌐
+
+Open your browser and navigate to:
+
+```
+http://localhost:5000
 ```
 
+---
 
-### Techstack Used:
+## ☁️ AWS CI/CD Deployment with GitHub Actions
 
-- Python
-- LangChain
-- Flask
-- GPT
-- Pinecone
+### Step 1: Log in to AWS Console 🔑
 
+Access your AWS Management Console.
 
-# AWS-CICD-Deployment-with-Github-Actions
+### Step 2: Create an IAM User for Deployment 🧑‍💻
 
-## 1. Login to AWS console.
+1. Create an IAM user with the following permissions:
+   - `AmazonEC2ContainerRegistryFullAccess`
+   - `AmazonEC2FullAccess`
+2. Save the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
-## 2. Create IAM user for deployment
+### Step 3: Create an ECR Repository 📦
 
-	#with specific access
+1. Create an ECR repository to store your Docker image.
+2. Note the URI (e.g., `970547337635.dkr.ecr.ap-south-1.amazonaws.com/medicalchatbot`).
 
-	1. EC2 access : It is virtual machine
+### Step 4: Launch an EC2 Instance 💻
 
-	2. ECR: Elastic Container registry to save your docker image in aws
+1. Create an EC2 instance (Ubuntu).
 
+2. Install Docker on the EC2 instance:
 
-	#Description: About the deployment
+   ```bash
+   sudo apt-get update -y
+   sudo apt-get upgrade
+   curl -fsSL https://get.docker.com -o get-docker.sh
+   sudo sh get-docker.sh
+   sudo usermod -aG docker ubuntu
+   newgrp docker
+   ```
 
-	1. Build docker image of the source code
+### Step 5: Configure EC2 as a Self-Hosted Runner 🏃
 
-	2. Push your docker image to ECR
+1. Navigate to your GitHub repository: `Settings > Actions > Runners`.
+2. Add a new self-hosted runner, select the OS (Ubuntu), and follow the setup instructions on your EC2 instance.
 
-	3. Launch Your EC2 
+### Step 6: Set Up GitHub Secrets 🔒
 
-	4. Pull Your image from ECR in EC2
+Add the following secrets in your GitHub repository (`Settings > Secrets and variables > Actions`):
 
-	5. Lauch your docker image in EC2
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_DEFAULT_REGION` (e.g., `ap-south-1`)
+- `ECR_REPO` (e.g., `970547337635.dkr.ecr.ap-south-1.amazonaws.com/medicalchatbot`)
+- `PINECONE_API_KEY`
+- `GOOGLE_API_KEY`
 
-	#Policy:
+### Deployment Workflow 🛠️
 
-	1. AmazonEC2ContainerRegistryFullAccess
+1. Build the Docker image from the source code 🖼️
+2. Push the Docker image to ECR 📤
+3. Launch your EC2 instance 🚀
+4. Pull the image from ECR to EC2 📥
+5. Run the Docker image on EC2 🏃
 
-	2. AmazonEC2FullAccess
+---
 
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 970547337635.dkr.ecr.ap-south-1.amazonaws.com/medicalchatbot
+## 📂 Project Structure
 
-	
-## 4. Create EC2 machine (Ubuntu) 
+```
+Medical-Chatbot-Generative-AI/
+│
+├── app.py                  # Main Flask application for the chatbot
+├── store_index.py          # Script to store embeddings in Pinecone
+├── templates/              # HTML templates for the web interface
+│   └── chat.html           # Chatbot UI template
+├── static/                 # Static assets (CSS, JS, etc.)
+│   └── style.css           # Styling for the chatbot UI
+├── requirements.txt        # Project dependencies
+├── .env                    # Environment variables (not tracked in git)
+├── README.md               # Project documentation (this file)
+├── LICENSE                 # License file
+└── .gitignore              # Git ignore file
+```
 
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
+---
 
-	sudo apt-get update -y
+## 🤝 Contributing
 
-	sudo apt-get upgrade
-	
-	#required
+We welcome contributions! Follow these steps:
 
-	curl -fsSL https://get.docker.com -o get-docker.sh
+1. Fork the repository 🍴
+2. Create a feature branch (`git checkout -b feature-branch`) 🌿
+3. Commit your changes (`git commit -m "Add feature"`) 💾
+4. Push to the branch (`git push origin feature-branch`) 📤
+5. Create a Pull Request 📬
 
-	sudo sh get-docker.sh
+---
 
-	sudo usermod -aG docker ubuntu
+## 📜 License
 
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
+This project is licensed under the MIT License. See the LICENSE file for details.
 
+---
 
-# 7. Setup github secrets:
-
-   - AWS_ACCESS_KEY_ID
-   - AWS_SECRET_ACCESS_KEY
-   - AWS_DEFAULT_REGION
-   - ECR_REPO
-   - PINECONE_API_KEY
-   - OPENAI_API_KEY
-
-    
+🌟 **Happy Coding!** 🌟
